@@ -7,24 +7,16 @@
     tools:context="com.example.android.popularmovies.MainActivity">
 
 
-    <Button
-        android:id="@+id/button"
+    <TextView
+        android:id="@+id/url_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
-        android:text="Popular" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="16dp"
-        android:text="Vote" />
+        tools:text="Here is the URL" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/json_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
