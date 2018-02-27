@@ -17,6 +17,9 @@ import java.util.Scanner;
 
 public class NetworkUtils {
 
+    public static final String SORT_BY_POPULARITY_DESC = "popularity.desc";
+    public static final String SORT_BY_VOTE_AVERAGE_DESC = "vote_average.desc";
+
     static final String MOVIE_BASE_URL =
             "https://api.themoviedb.org/3/";
 
@@ -25,8 +28,7 @@ public class NetworkUtils {
 
     static final String MOVIE_PATH =
             "movie";
-    static final String SORT_BY_POPULARITY_DESC = "popularity.desc";
-    static final String SORT_BY_VOTE_AVERAGE_DESC = "vote_average.desc";
+
     /*
     * The sort field.
     * Default: results are sorted by popularity if no field is specified.
@@ -63,13 +65,13 @@ public class NetworkUtils {
      *
      * @return The URL to use to query the GitHub.
      */
-    public static URL buildUrl() {
+    public static URL buildUrl(String searchOption) {
         Uri builtUri = Uri.parse(MOVIE_BASE_URL).buildUpon()
                 .appendPath(DISCOVER_PATH)
                 .appendPath(MOVIE_PATH)
                 .appendQueryParameter(PARAM_API_KEY, API_KEY)
-                .appendQueryParameter(PARAM_SORT, SORT_BY_POPULARITY_DESC)
                 .appendQueryParameter(PARAM_LANGUAGE, LANGUAGE)
+                .appendQueryParameter(PARAM_SORT, searchOption)
                 .build();
 
         URL url = null;

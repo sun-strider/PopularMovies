@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Popular Movies</string>
+
+    <string name="search_popular">Search Popular</string>
+
+    <string name="search_vote">Best Voted</string>
 </resources>
