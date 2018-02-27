@@ -1,39 +1,62 @@
 package com.example.android.popularmovies;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.android.popularmovies.utilities.NetworkUtils;
 
+import java.io.IOException;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
+
     private TextView mUrlDisplayTextView;
     private TextView mSearchResultsTextView;
+
+    private TextView mErrorMessageTextView;
+
+    private ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mUrlDisplayTextView = findViewById(R.id.url_tv);
+        mSearchResultsTextView = findViewById(R.id.json_tv);
+
+        mErrorMessageTextView = findViewById(R.id.tv_error_message_display);
+
+        mProgressBar = findViewById(R.id.pb_loading_indicator);
     }
 
 
-    private void doMovieDbSearch(URL searchUrl) {
-        // The network call. Will crash currently, because it is on the main thread.
-        /*
+    private String doMovieDbSearch(URL searchUrl) {
         try {
-            NetworkUtils.getResponseFromHttpUrl(searchUrl);
+            return NetworkUtils.getResponseFromHttpUrl(searchUrl);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        */
+        return null;
+    }
+
+    private void showJsonDataView() {
+        mErrorMessageTextView.setVisibility(View.INVISIBLE);
+        mSearchResultsTextView.setVisibility(View.VISIBLE);
+    }
+
+    private void showErrorMessage() {
+        mSearchResultsTextView.setVisibility(View.INVISIBLE);
+        mErrorMessageTextView.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -50,16 +73,47 @@ public class MainActivity extends AppCompatActivity {
 
             Log.i(LOG_TAG, theMovieDbSearchURL.toString());
 
-            mUrlDisplayTextView = findViewById(R.id.url_tv);
             mUrlDisplayTextView.setText(theMovieDbSearchURL.toString());
+
+            new MovieDbQueeryTask().execute(theMovieDbSearchURL);
+
         } else if (clickedItemId == R.id.action_search_rating) {
             URL theMovieDbSearchURL = NetworkUtils.buildUrl(NetworkUtils.SORT_BY_VOTE_AVERAGE_DESC);
 
             Log.i(LOG_TAG, theMovieDbSearchURL.toString());
 
-            mUrlDisplayTextView = findViewById(R.id.url_tv);
             mUrlDisplayTextView.setText(theMovieDbSearchURL.toString());
+
+            new MovieDbQueeryTask().execute(theMovieDbSearchURL);
         }
         return true;
+    }
+
+    private class MovieDbQueeryTask extends AsyncTask<URL, Void, String> {
+
+        @Override
+        protected void onPreExecute() {
+            mProgressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected String doInBackground(URL... urls) {
+            URL searchUrl = urls[0];
+            String movieDbSearchResults = null;
+            movieDbSearchResults = doMovieDbSearch(searchUrl);
+            return movieDbSearchResults;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            mProgressBar.setVisibility(View.INVISIBLE);
+
+            if (s != null && s != "") {
+                mSearchResultsTextView.setText(s);
+                showJsonDataView();
+            } else {
+                showErrorMessage();
+            }
+        }
     }
 }

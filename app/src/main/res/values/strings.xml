@@ -4,4 +4,6 @@
     <string name="search_popular">Search Popular</string>
 
     <string name="search_vote">Best Voted</string>
+
+    <string name="error_message">Failed to get results. Please try again.</string>
 </resources>
