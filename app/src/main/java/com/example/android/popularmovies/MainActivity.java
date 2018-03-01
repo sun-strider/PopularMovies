@@ -11,9 +11,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.android.popularmovies.utilities.NetworkUtils;
+import com.example.android.popularmovies.utilities.OpenMovieJsonUtils;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -100,12 +103,26 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(URL... urls) {
             URL searchUrl = urls[0];
             String movieDbSearchResults = null;
+
+            // do the http request and store the JSON result in a string
             movieDbSearchResults = doMovieDbSearch(searchUrl);
-            return movieDbSearchResults;
+
+            // parse the JSON string and return a string arraylist
+            List<String> parsedMovieData = new ArrayList<String>();
+            parsedMovieData = OpenMovieJsonUtils.parseMovieDbJson(movieDbSearchResults);
+
+            String moviesString = "";
+
+            for (int i = 0; i < parsedMovieData.size(); i++) {
+                moviesString = moviesString + parsedMovieData.get(i);
+            }
+
+            return moviesString;
         }
 
         @Override
         protected void onPostExecute(String s) {
+
             mProgressBar.setVisibility(View.INVISIBLE);
 
             if (s != null && s != "") {
