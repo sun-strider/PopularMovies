@@ -86,8 +86,8 @@ public class OpenMovieJsonUtils {
                         overview = mMovie.getString(M_DB_OVERVIEW);
                     }
 
-                    // TODO: store the data either in a string, or create a movie class, instantiate and store the data
-                    // TODO: if movie class is created: either make method return a movie instance then transform to string in calling activity
+                    // TODO: create a Movie class to store the data in
+                    // TODO: store the data in a Movie ArrayList
 
                     mParsedMovieData.add(
                             title + "\n" +

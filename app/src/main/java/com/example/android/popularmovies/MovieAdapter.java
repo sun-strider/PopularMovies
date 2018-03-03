@@ -16,7 +16,12 @@ import java.util.List;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
+    final private MovieAdapterOnClickHandler mClickHandler;
     private List<String> mMovieData;
+
+    public MovieAdapter(MovieAdapterOnClickHandler onClickHandler) {
+        mClickHandler = onClickHandler;
+    }
 
     // class to calculate the number of columns for a grid with a given column width
     // adapted from https://stackoverflow.com/a/38472370
@@ -69,7 +74,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         notifyDataSetChanged();
     }
 
-    class MovieViewHolder extends RecyclerView.ViewHolder {
+    interface MovieAdapterOnClickHandler {
+        void onClick(String currentMovie);
+    }
+
+    class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         // create a TextView variable in which the movie data will be stored
         final TextView movieListItemTextView;
@@ -79,6 +88,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
             // in the constructor of the view holder, the movie item view is set
             movieListItemTextView = itemView.findViewById(R.id.tv_movie_data);
+
+            // set the click listener to the list item
+            movieListItemTextView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            int adapterPosition = getAdapterPosition();
+            String currentMovie = mMovieData.get(adapterPosition);
+            mClickHandler.onClick(currentMovie);
         }
     }
 }

@@ -12,16 +12,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.popularmovies.utilities.NetworkUtils;
 import com.example.android.popularmovies.utilities.OpenMovieJsonUtils;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieAdapterOnClickHandler {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -70,10 +70,13 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);
 
         // a new adapter will be created and stored in mMovieAdapter
-        mMovieAdapter = new MovieAdapter();
+        mMovieAdapter = new MovieAdapter(this);
 
         // the adapter is set on the recycler view
         mRecyclerView.setAdapter(mMovieAdapter);
+
+        // DONE 1: implement click handling for items
+        // TODO 2: create activity for detail view of movie
     }
 
 
@@ -136,6 +139,12 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public void onClick(String currentMovie) {
+        Toast.makeText(this, currentMovie, Toast.LENGTH_SHORT)
+                .show();
+    }
+
     private class MovieDbQueeryTask extends AsyncTask<URL, Void, List<String>> {
 
         @Override
@@ -146,14 +155,13 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected List<String> doInBackground(URL... urls) {
             URL searchUrl = urls[0];
-            String movieDbSearchResults = null;
+            String movieDbSearchResults;
 
             // do the http request and store the JSON result in a string
             movieDbSearchResults = doMovieDbSearch(searchUrl);
 
             // parse the JSON string and return a string arraylist
-            List<String> parsedMovieData = new ArrayList<String>();
-            parsedMovieData = OpenMovieJsonUtils.parseMovieDbJson(movieDbSearchResults);
+            List<String> parsedMovieData = OpenMovieJsonUtils.parseMovieDbJson(movieDbSearchResults);
 
             return parsedMovieData;
         }
