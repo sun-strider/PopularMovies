@@ -6,13 +6,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.List;
+
 /**
  * Created by me74 on 01.03.2018.
  */
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
-    private String[] mMovieData;
+    private List<String> mMovieData;
 
     @Override
     public MovieAdapter.MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -35,7 +37,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     public void onBindViewHolder(MovieAdapter.MovieViewHolder holder, int position) {
 
         // get the current movie information
-        String currentMovie = mMovieData[position];
+        String currentMovie = mMovieData.get(position);
 
         // get the movie item text view from the holder and set the information of the current movie
         holder.movieListItemTextView.setText(currentMovie);
@@ -47,11 +49,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         if (mMovieData == null) {
             return 0;
         }
-        return mMovieData.length;
+        return mMovieData.size();
     }
 
     // a method that sets the movie data to mMovieData
-    void setMovieData(String movieData[]) {
+    void setMovieData(List<String> movieData) {
         mMovieData = movieData;
         notifyDataSetChanged();
     }

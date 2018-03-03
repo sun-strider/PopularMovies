@@ -3,6 +3,8 @@ package com.example.android.popularmovies;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,8 +24,11 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
+    private RecyclerView mRecyclerView;
+
+    private MovieAdapter mMovieAdapter;
+
     private TextView mUrlDisplayTextView;
-    private TextView mSearchResultsTextView;
 
     private TextView mErrorMessageTextView;
 
@@ -35,11 +40,33 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mUrlDisplayTextView = findViewById(R.id.url_tv);
-        mSearchResultsTextView = findViewById(R.id.json_tv);
 
+        // get e reference to the RecyclerView
+        mRecyclerView = findViewById(R.id.rv_movie);
+
+        // TextView to display an error message. will be hidden if there are no errors
         mErrorMessageTextView = findViewById(R.id.tv_error_message_display);
 
+        // loading progress bar
         mProgressBar = findViewById(R.id.pb_loading_indicator);
+
+        // create a new layoutmanager. at this point, it will be a linear layout manager, vertical orientation
+        // TODO: change to grid layout manager when linear is working properly
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        layoutManager.setReverseLayout(false);
+
+        // the layout manager is set on the recycler view
+        mRecyclerView.setLayoutManager(layoutManager);
+
+        // set that all items in the list will have fixed size
+        mRecyclerView.setHasFixedSize(true);
+
+        // a new adapter will be created and stored in mMovieAdapter
+        mMovieAdapter = new MovieAdapter();
+
+        // the adapter is set on the recycler view
+        mRecyclerView.setAdapter(mMovieAdapter);
     }
 
 
@@ -52,13 +79,17 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
-    private void showJsonDataView() {
+    private void showMovieDataView() {
         mErrorMessageTextView.setVisibility(View.INVISIBLE);
-        mSearchResultsTextView.setVisibility(View.VISIBLE);
+
+        // the recycler view is shown instead of the the fixed text view
+        mRecyclerView.setVisibility(View.VISIBLE);
     }
 
     private void showErrorMessage() {
-        mSearchResultsTextView.setVisibility(View.INVISIBLE);
+        // the recycler view is hidden
+        mRecyclerView.setVisibility(View.INVISIBLE);
+
         mErrorMessageTextView.setVisibility(View.VISIBLE);
     }
 
@@ -78,6 +109,9 @@ public class MainActivity extends AppCompatActivity {
 
             mUrlDisplayTextView.setText(theMovieDbSearchURL.toString());
 
+            // set the adapter to null before doing the search again
+            mMovieAdapter.setMovieData(null);
+
             new MovieDbQueeryTask().execute(theMovieDbSearchURL);
 
         } else if (clickedItemId == R.id.action_search_rating) {
@@ -87,12 +121,15 @@ public class MainActivity extends AppCompatActivity {
 
             mUrlDisplayTextView.setText(theMovieDbSearchURL.toString());
 
+            // set the adapter to null before doing the search again
+            mMovieAdapter.setMovieData(null);
+
             new MovieDbQueeryTask().execute(theMovieDbSearchURL);
         }
         return true;
     }
 
-    private class MovieDbQueeryTask extends AsyncTask<URL, Void, String> {
+    private class MovieDbQueeryTask extends AsyncTask<URL, Void, List<String>> {
 
         @Override
         protected void onPreExecute() {
@@ -100,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected String doInBackground(URL... urls) {
+        protected List<String> doInBackground(URL... urls) {
             URL searchUrl = urls[0];
             String movieDbSearchResults = null;
 
@@ -111,23 +148,17 @@ public class MainActivity extends AppCompatActivity {
             List<String> parsedMovieData = new ArrayList<String>();
             parsedMovieData = OpenMovieJsonUtils.parseMovieDbJson(movieDbSearchResults);
 
-            String moviesString = "";
-
-            for (int i = 0; i < parsedMovieData.size(); i++) {
-                moviesString = moviesString + parsedMovieData.get(i);
-            }
-
-            return moviesString;
+            return parsedMovieData;
         }
 
         @Override
-        protected void onPostExecute(String s) {
+        protected void onPostExecute(List<String> movieData) {
 
             mProgressBar.setVisibility(View.INVISIBLE);
 
-            if (s != null && s != "") {
-                mSearchResultsTextView.setText(s);
-                showJsonDataView();
+            if (movieData != null) {
+                mMovieAdapter.setMovieData(movieData);
+                showMovieDataView();
             } else {
                 showErrorMessage();
             }

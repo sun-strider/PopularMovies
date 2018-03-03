@@ -94,7 +94,7 @@ public class OpenMovieJsonUtils {
                                     releaseDate + "\n" +
                                     voteAverage + "\n" +
                                     posterPath + "\n" +
-                                    overview + "\n\n"
+                                    overview
                     );
                 }
 
