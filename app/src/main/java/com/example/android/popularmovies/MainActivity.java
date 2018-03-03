@@ -1,5 +1,6 @@
 package com.example.android.popularmovies;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.android.popularmovies.utilities.NetworkUtils;
 import com.example.android.popularmovies.utilities.OpenMovieJsonUtils;
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         mRecyclerView.setAdapter(mMovieAdapter);
 
         // DONE 1: implement click handling for items
-        // TODO 2: create activity for detail view of movie
+        // DONE 2: create activity for detail view of movie
     }
 
 
@@ -141,8 +141,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
     @Override
     public void onClick(String currentMovie) {
-        Toast.makeText(this, currentMovie, Toast.LENGTH_SHORT)
-                .show();
+        Intent intent = new Intent(this, DetailActivity.class);
+        startActivity(intent);
     }
 
     private class MovieDbQueeryTask extends AsyncTask<URL, Void, List<String>> {
