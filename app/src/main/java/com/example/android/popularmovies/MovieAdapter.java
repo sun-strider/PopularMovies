@@ -1,12 +1,16 @@
 package com.example.android.popularmovies;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.example.android.popularmovies.data.MovieContract;
 
 import java.util.List;
 
@@ -18,6 +22,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     final private MovieAdapterOnClickHandler mClickHandler;
     private List<String> mMovieData;
+
+    private ContentValues[] mMovieContentValues;
 
     public MovieAdapter(MovieAdapterOnClickHandler onClickHandler) {
         mClickHandler = onClickHandler;
@@ -53,29 +59,29 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     public void onBindViewHolder(MovieAdapter.MovieViewHolder holder, int position) {
 
         // get the current movie information
-        String currentMovie = mMovieData.get(position);
+        ContentValues currentMovieValues = mMovieContentValues[position];
 
         // get the movie item text view from the holder and set the information of the current movie
-        holder.movieListItemTextView.setText(currentMovie);
+        holder.movieListItemTextView.setText(currentMovieValues.getAsString(MovieContract.MovieEntry.COLUMN_TITLE));
     }
 
     @Override
     public int getItemCount() {
         // check if movie data exists. if not return 0 as item count, else return the length of the array
-        if (mMovieData == null) {
+        if (mMovieContentValues == null) {
             return 0;
         }
-        return mMovieData.size();
+        return mMovieContentValues.length;
     }
 
     // a method that sets the movie data to mMovieData
-    void setMovieData(List<String> movieData) {
-        mMovieData = movieData;
+    void setMovieData(ContentValues[] movieData) {
+        mMovieContentValues = movieData;
         notifyDataSetChanged();
     }
 
     interface MovieAdapterOnClickHandler {
-        void onClick(String currentMovie);
+        void onClick(Bundle currentMovieBundle);
     }
 
     class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -96,8 +102,17 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         @Override
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
-            String currentMovie = mMovieData.get(adapterPosition);
-            mClickHandler.onClick(currentMovie);
+            ContentValues currentMovie = mMovieContentValues[adapterPosition];
+
+            // make a bundle out of the current movie so it can be passed with the intent
+            Bundle movieBundle = new Bundle();
+            movieBundle.putString(MovieContract.MovieEntry.COLUMN_TITLE, currentMovie.getAsString(MovieContract.MovieEntry.COLUMN_TITLE));
+            movieBundle.putString(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, currentMovie.getAsString(MovieContract.MovieEntry.COLUMN_RELEASE_DATE));
+            movieBundle.putString(MovieContract.MovieEntry.COLUMN_POSTER_PATH, currentMovie.getAsString(MovieContract.MovieEntry.COLUMN_POSTER_PATH));
+            movieBundle.putString(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE, currentMovie.getAsString(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE));
+            movieBundle.putString(MovieContract.MovieEntry.COLUMN_OVERVIEW, currentMovie.getAsString(MovieContract.MovieEntry.COLUMN_OVERVIEW));
+
+            mClickHandler.onClick(movieBundle);
         }
     }
 }

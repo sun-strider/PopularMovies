@@ -1,7 +1,10 @@
 package com.example.android.popularmovies.utilities;
 
+import android.content.ContentValues;
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.example.android.popularmovies.data.MovieContract;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,9 +22,11 @@ public class OpenMovieJsonUtils {
     private static final String LOG_TAG = OpenMovieJsonUtils.class.getName();
 
 
-    public static List<String> parseMovieDbJson(String json) {
+    public static ContentValues[] parseMovieDbJson(String json) {
 
         List<String> mParsedMovieData = new ArrayList<>();
+
+        ContentValues[] movieContentValues = null;
 
         final String M_DB_RESULTS = "results";
         final String M_DB_TITLE = "original_title";
@@ -56,6 +61,8 @@ public class OpenMovieJsonUtils {
             if (mBaseJsonResponse.has(M_DB_RESULTS)) {
                 mResults = mBaseJsonResponse.getJSONArray(M_DB_RESULTS);
 
+                movieContentValues = new ContentValues[mResults.length()];
+
                 // loop through the results to get the movies
                 for (int i = 0; i < mResults.length(); i++) {
 
@@ -89,6 +96,15 @@ public class OpenMovieJsonUtils {
                     // TODO: create a Movie class to store the data in
                     // TODO: store the data in a Movie ArrayList
 
+                    ContentValues movieValues = new ContentValues();
+                    movieValues.put(MovieContract.MovieEntry.COLUMN_TITLE, title);
+                    movieValues.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, releaseDate);
+                    movieValues.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH, posterPath);
+                    movieValues.put(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE, voteAverage);
+                    movieValues.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, overview);
+
+                    movieContentValues[i] = movieValues;
+
                     mParsedMovieData.add(
                             title + "\n" +
                                     releaseDate + "\n" +
@@ -98,7 +114,6 @@ public class OpenMovieJsonUtils {
                     );
                 }
 
-                return mParsedMovieData;
             }
 
 
@@ -110,7 +125,7 @@ public class OpenMovieJsonUtils {
         }
 
         // Return parsed movie data array
-        return mParsedMovieData;
+        return movieContentValues;
     }
 
 }

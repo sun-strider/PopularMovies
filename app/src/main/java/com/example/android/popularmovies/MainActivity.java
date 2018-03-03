@@ -1,5 +1,6 @@
 package com.example.android.popularmovies;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,7 +20,6 @@ import com.example.android.popularmovies.utilities.OpenMovieJsonUtils;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieAdapterOnClickHandler {
 
@@ -140,12 +140,13 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     }
 
     @Override
-    public void onClick(String currentMovie) {
+    public void onClick(Bundle currentMovieBundle) {
         Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra("movieBundle", currentMovieBundle);
         startActivity(intent);
     }
 
-    private class MovieDbQueeryTask extends AsyncTask<URL, Void, List<String>> {
+    private class MovieDbQueeryTask extends AsyncTask<URL, Void, ContentValues[]> {
 
         @Override
         protected void onPreExecute() {
@@ -153,21 +154,19 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         }
 
         @Override
-        protected List<String> doInBackground(URL... urls) {
+        protected ContentValues[] doInBackground(URL... urls) {
             URL searchUrl = urls[0];
             String movieDbSearchResults;
 
             // do the http request and store the JSON result in a string
             movieDbSearchResults = doMovieDbSearch(searchUrl);
 
-            // parse the JSON string and return a string arraylist
-            List<String> parsedMovieData = OpenMovieJsonUtils.parseMovieDbJson(movieDbSearchResults);
-
-            return parsedMovieData;
+            // parse the JSON string and return a content values array
+            return OpenMovieJsonUtils.parseMovieDbJson(movieDbSearchResults);
         }
 
         @Override
-        protected void onPostExecute(List<String> movieData) {
+        protected void onPostExecute(ContentValues[] movieData) {
 
             mProgressBar.setVisibility(View.INVISIBLE);
 
