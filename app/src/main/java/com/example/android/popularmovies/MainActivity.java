@@ -3,6 +3,7 @@ package com.example.android.popularmovies;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -23,6 +24,9 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
+
+    // the desired width of a column in the grid
+    private static final int COLUMN_WIDTH = 180;
 
     private RecyclerView mRecyclerView;
 
@@ -50,9 +54,12 @@ public class MainActivity extends AppCompatActivity {
         // loading progress bar
         mProgressBar = findViewById(R.id.pb_loading_indicator);
 
-        // create a new layoutmanager. at this point, it will be a linear layout manager, vertical orientation
-        // TODO: change to grid layout manager when linear is working properly
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        //calculate the number of columns with a desired column width
+        int nrOfColumns = MovieAdapter.calculateNoOfColumns(this, COLUMN_WIDTH);
+
+        // create a new layout manager. at this point, it will be a linear layout manager, vertical orientation
+        // DONE: change to grid layout manager when linear is working properly
+        GridLayoutManager layoutManager = new GridLayoutManager(this, nrOfColumns);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         layoutManager.setReverseLayout(false);
 

@@ -1,6 +1,8 @@
 package com.example.android.popularmovies;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,15 @@ import java.util.List;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
     private List<String> mMovieData;
+
+    // class to calculate the number of columns for a grid with a given column width
+    // adapted from https://stackoverflow.com/a/38472370
+    public static int calculateNoOfColumns(Context context, int maxWidth) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        int noOfColumns = (int) (dpWidth / maxWidth);
+        return noOfColumns;
+    }
 
     @Override
     public MovieAdapter.MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
