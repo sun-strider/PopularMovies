@@ -21,7 +21,7 @@ public class OpenMovieJsonUtils {
 
     public static List<String> parseMovieDbJson(String json) {
 
-        List<String> mParsedMovieData = new ArrayList<String>();
+        List<String> mParsedMovieData = new ArrayList<>();
 
         final String M_DB_RESULTS = "results";
         final String M_DB_TITLE = "original_title";
@@ -33,11 +33,11 @@ public class OpenMovieJsonUtils {
         JSONObject mBaseJsonResponse;
         JSONArray mResults;
         JSONObject mMovie;
-        String mTitle = "";
-        String mReleaseDate = "";
-        String mPosterPath = "";
-        String mVoteAverage = "";
-        String mOverview = "";
+        String title = "";
+        String releaseDate = "";
+        String posterPath = "";
+        String voteAverage = "";
+        String overview = "";
 
 
         if (TextUtils.isEmpty(json)) {
@@ -63,37 +63,38 @@ public class OpenMovieJsonUtils {
 
                     if (mMovie.has(M_DB_TITLE)) {
 
-                        mTitle = mMovie.getString(M_DB_TITLE);
+                        title = mMovie.getString(M_DB_TITLE);
                     }
 
                     if (mMovie.has(M_DB_RELEASE_DATE)) {
 
-                        mReleaseDate = mMovie.getString(M_DB_RELEASE_DATE);
+                        releaseDate = mMovie.getString(M_DB_RELEASE_DATE);
                     }
 
                     if (mMovie.has(M_DB_POSTER_PATH)) {
 
-                        mPosterPath = mMovie.getString(M_DB_POSTER_PATH);
+                        posterPath = mMovie.getString(M_DB_POSTER_PATH);
                     }
 
                     if (mMovie.has(M_DB_VOTE_AVERAGE)) {
 
-                        mVoteAverage = mMovie.getString(M_DB_VOTE_AVERAGE);
+                        voteAverage = mMovie.getString(M_DB_VOTE_AVERAGE);
                     }
 
                     if (mMovie.has(M_DB_OVERVIEW)) {
 
-                        mOverview = mMovie.getString(M_DB_OVERVIEW);
+                        overview = mMovie.getString(M_DB_OVERVIEW);
                     }
 
                     // TODO: store the data either in a string, or create a movie class, instantiate and store the data
                     // TODO: if movie class is created: either make method return a movie instance then transform to string in calling activity
 
                     mParsedMovieData.add(
-                            mTitle + "\n" +
-                                    mReleaseDate + "\n" +
-                                    mVoteAverage + "\n" +
-                                    mOverview + "\n\n"
+                            title + "\n" +
+                                    releaseDate + "\n" +
+                                    voteAverage + "\n" +
+                                    posterPath + "\n" +
+                                    overview + "\n\n"
                     );
                 }
 
