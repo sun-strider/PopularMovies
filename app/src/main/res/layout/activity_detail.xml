@@ -9,16 +9,15 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:minHeight="300dp">
-
+        android:minHeight="300dp"
+        android:padding="@dimen/activity_horizontal_margin_small">
 
         <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="wrap_content"
+            android:id="@+id/iv_detail_movie_poster"
+            android:layout_width="180dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin_small"
-            android:layout_marginStart="@dimen/activity_horizontal_margin_small"
-            android:layout_marginTop="8dp"
+            android:layout_margin="@dimen/activity_vertical_margin_small"
+            android:adjustViewBounds="true"
             android:contentDescription="Movie Poster"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -26,47 +25,74 @@
 
         <TextView
             android:id="@+id/tv_title"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin_small"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin_small"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:textSize="24sp"
+            android:layout_margin="@dimen/activity_horizontal_margin_small"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/text_size_large"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
-            app:layout_constraintTop_toTopOf="@+id/imageView"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/iv_detail_movie_poster"
+            app:layout_constraintTop_toTopOf="@+id/iv_detail_movie_poster"
             tools:text="Movie Title" />
 
         <TextView
             android:id="@+id/tv_release_date"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin_small"
+            android:layout_marginRight="@dimen/activity_horizontal_margin_small"
             android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_standard"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/tv_title"
             app:layout_constraintTop_toBottomOf="@+id/tv_title"
             tools:text="14-08-1974" />
 
+
         <TextView
-            android:id="@+id/tv_vote_average"
+            android:id="@+id/textView6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:text="Vote Average:"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_standard"
             app:layout_constraintStart_toStartOf="@+id/tv_release_date"
-            app:layout_constraintTop_toBottomOf="@+id/tv_release_date"
-            tools:text="Vote Average" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_release_date" />
+
+        <TextView
+            android:id="@+id/tv_vote_average"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin_small"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin_small"
+            android:layout_marginRight="@dimen/activity_horizontal_margin_small"
+            android:layout_marginStart="@dimen/activity_horizontal_margin_small"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_standard"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView6"
+            app:layout_constraintTop_toTopOf="@+id/textView6"
+            tools:text="8" />
 
         <TextView
             android:id="@+id/tv_overview"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin_small"
+            android:layout_marginStart="@dimen/activity_horizontal_margin_small"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/text_size_standard"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_vote_average"
+            app:layout_constraintTop_toBottomOf="@+id/iv_detail_movie_poster"
             tools:text="Overview" />
+
 
     </android.support.constraint.ConstraintLayout>
 

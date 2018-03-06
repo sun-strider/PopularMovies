@@ -101,7 +101,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             super(itemView);
 
             // in the constructor of the view holder, the movie item view is set
-            movieListItemPosterImageView = itemView.findViewById(R.id.iv_movie_poster);
+            movieListItemPosterImageView = itemView.findViewById(R.id.iv_grid_movie_poster);
 
             // set the click listener to the list item
             itemView.setOnClickListener(this);
