@@ -22,7 +22,7 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        mDetailTextView = findViewById(R.id.tv_display);
+        mDetailTextView = findViewById(R.id.tv_title);
 
         Intent intentThatCalled = getIntent();
 

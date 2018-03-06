@@ -8,11 +8,11 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import com.example.android.popularmovies.data.MovieContract;
-
-import java.util.List;
+import com.example.android.popularmovies.utilities.NetworkUtils;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by me74 on 01.03.2018.
@@ -21,7 +21,6 @@ import java.util.List;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
     final private MovieAdapterOnClickHandler mClickHandler;
-    private List<String> mMovieData;
 
     private ContentValues[] mMovieContentValues;
 
@@ -61,8 +60,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         // get the current movie information
         ContentValues currentMovieValues = mMovieContentValues[position];
 
-        // get the movie item text view from the holder and set the information of the current movie
-        holder.movieListItemTextView.setText(currentMovieValues.getAsString(MovieContract.MovieEntry.COLUMN_TITLE));
+        String posterPath = currentMovieValues.getAsString(MovieContract.MovieEntry.COLUMN_POSTER_PATH);
+
+        String posterUrl = NetworkUtils.buildMoviePosterUrl(posterPath).toString();
+
+        // set the poster image to the movie item image view
+        if (posterUrl != null) {
+            Picasso.with(holder.movieListItemPosterImageView.getContext())
+                    .load(posterUrl)
+                    .into(holder.movieListItemPosterImageView);
+        }
     }
 
     @Override
@@ -86,17 +93,18 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        // create a TextView variable in which the movie data will be stored
-        final TextView movieListItemTextView;
+
+        // create an ImageView variable in which the movie poster will be stored
+        final ImageView movieListItemPosterImageView;
 
         public MovieViewHolder(View itemView) {
             super(itemView);
 
             // in the constructor of the view holder, the movie item view is set
-            movieListItemTextView = itemView.findViewById(R.id.tv_movie_data);
+            movieListItemPosterImageView = itemView.findViewById(R.id.iv_movie_poster);
 
             // set the click listener to the list item
-            movieListItemTextView.setOnClickListener(this);
+            itemView.setOnClickListener(this);
         }
 
         @Override

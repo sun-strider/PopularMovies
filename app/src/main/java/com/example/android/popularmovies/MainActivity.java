@@ -32,8 +32,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
     private MovieAdapter mMovieAdapter;
 
-    private TextView mUrlDisplayTextView;
-
     private TextView mErrorMessageTextView;
 
     private ProgressBar mProgressBar;
@@ -42,8 +40,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mUrlDisplayTextView = findViewById(R.id.url_tv);
 
         // get e reference to the RecyclerView
         mRecyclerView = findViewById(R.id.rv_movie);
@@ -74,9 +70,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
         // the adapter is set on the recycler view
         mRecyclerView.setAdapter(mMovieAdapter);
-
-        // DONE 1: implement click handling for items
-        // DONE 2: create activity for detail view of movie
     }
 
 
@@ -113,11 +106,9 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     public boolean onOptionsItemSelected(MenuItem item) {
         int clickedItemId = item.getItemId();
         if (clickedItemId == R.id.action_search_popular) {
-            URL theMovieDbSearchURL = NetworkUtils.buildUrl(NetworkUtils.SORT_BY_POPULARITY_DESC);
+            URL theMovieDbSearchURL = NetworkUtils.buildDiscoverMovieUrl(NetworkUtils.SORT_BY_POPULARITY_DESC);
 
             Log.i(LOG_TAG, theMovieDbSearchURL.toString());
-
-            mUrlDisplayTextView.setText(theMovieDbSearchURL.toString());
 
             // set the adapter to null before doing the search again
             mMovieAdapter.setMovieData(null);
@@ -125,11 +116,9 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
             new MovieDbQueeryTask().execute(theMovieDbSearchURL);
 
         } else if (clickedItemId == R.id.action_search_rating) {
-            URL theMovieDbSearchURL = NetworkUtils.buildUrl(NetworkUtils.SORT_BY_VOTE_AVERAGE_DESC);
+            URL theMovieDbSearchURL = NetworkUtils.buildDiscoverMovieUrl(NetworkUtils.SORT_BY_VOTE_AVERAGE_DESC);
 
             Log.i(LOG_TAG, theMovieDbSearchURL.toString());
-
-            mUrlDisplayTextView.setText(theMovieDbSearchURL.toString());
 
             // set the adapter to null before doing the search again
             mMovieAdapter.setMovieData(null);

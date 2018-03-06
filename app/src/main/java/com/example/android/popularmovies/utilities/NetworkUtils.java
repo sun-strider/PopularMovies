@@ -29,6 +29,13 @@ public class NetworkUtils {
     static final String MOVIE_PATH =
             "movie";
 
+
+    static final String POSTER_BASE_URL =
+            "https://image.tmdb.org/t/p/";
+
+    static final String PATH_POSTER_SIZE_STANDARD =
+            "w780";
+
     /*
     * The sort field.
     * Default: results are sorted by popularity if no field is specified.
@@ -65,7 +72,7 @@ public class NetworkUtils {
      *
      * @return The URL to use to query the GitHub.
      */
-    public static URL buildUrl(String searchOption) {
+    public static URL buildDiscoverMovieUrl(String searchOption) {
         Uri builtUri = Uri.parse(MOVIE_BASE_URL).buildUpon()
                 .appendPath(DISCOVER_PATH)
                 .appendPath(MOVIE_PATH)
@@ -83,6 +90,24 @@ public class NetworkUtils {
 
         return url;
     }
+
+    public static URL buildMoviePosterUrl(String posterPath) {
+        Uri builtUri = Uri.parse(POSTER_BASE_URL).buildUpon()
+                .appendPath(PATH_POSTER_SIZE_STANDARD)
+                .build();
+
+        String fullUrlString = builtUri.toString() + posterPath;
+
+        URL url = null;
+        try {
+            url = new URL(fullUrlString);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return url;
+    }
+
 
     /**
      * This method returns the entire result from the HTTP response.
