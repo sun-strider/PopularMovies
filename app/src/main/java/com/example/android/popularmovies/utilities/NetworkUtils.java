@@ -15,6 +15,7 @@ import java.util.Scanner;
  * Created by me74 on 22.02.2018.
  */
 
+@SuppressWarnings("DefaultFileTemplate")
 public class NetworkUtils {
 
     public static final String SORT_BY_POPULARITY_DESC = "popularity.desc";
@@ -78,6 +79,7 @@ public class NetworkUtils {
                 .appendPath(MOVIE_PATH)
                 .appendQueryParameter(PARAM_API_KEY, API_KEY)
                 .appendQueryParameter(PARAM_LANGUAGE, LANGUAGE)
+                .appendQueryParameter(PARAM_PAGE, PAGE_SHOWN)
                 .appendQueryParameter(PARAM_SORT, searchOption)
                 .build();
 

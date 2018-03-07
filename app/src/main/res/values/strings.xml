@@ -6,4 +6,9 @@
     <string name="search_vote">Best Voted</string>
 
     <string name="error_message">Failed to get results. Please try again.</string>
+
+    <string name="movie_poster_iv_info">Movie Poster</string>
+
+    <string name="vote_average">Vote Average: </string>
+
 </resources>

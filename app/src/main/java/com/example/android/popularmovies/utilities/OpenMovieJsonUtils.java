@@ -10,21 +10,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by me74 on 28.02.2018.
  */
 
+@SuppressWarnings("DefaultFileTemplate")
 public class OpenMovieJsonUtils {
 
     private static final String LOG_TAG = OpenMovieJsonUtils.class.getName();
 
 
     public static ContentValues[] parseMovieDbJson(String json) {
-
-        List<String> mParsedMovieData = new ArrayList<>();
 
         ContentValues[] movieContentValues = null;
 
@@ -104,14 +100,6 @@ public class OpenMovieJsonUtils {
                     movieValues.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, overview);
 
                     movieContentValues[i] = movieValues;
-
-                    mParsedMovieData.add(
-                            title + "\n" +
-                                    releaseDate + "\n" +
-                                    voteAverage + "\n" +
-                                    posterPath + "\n" +
-                                    overview
-                    );
                 }
 
             }

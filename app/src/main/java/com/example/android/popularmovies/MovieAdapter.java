@@ -3,6 +3,7 @@ package com.example.android.popularmovies;
 import android.content.ContentValues;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -18,9 +19,13 @@ import com.squareup.picasso.Picasso;
  * Created by me74 on 01.03.2018.
  */
 
+@SuppressWarnings("DefaultFileTemplate")
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
-    final private MovieAdapterOnClickHandler mClickHandler;
+    // the desired width of a column in the grid
+    private static final int COLUMN_WIDTH = 180;
+
+    private final MovieAdapterOnClickHandler mClickHandler;
 
     private ContentValues[] mMovieContentValues;
 
@@ -30,15 +35,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     // class to calculate the number of columns for a grid with a given column width
     // adapted from https://stackoverflow.com/a/38472370
-    public static int calculateNoOfColumns(Context context, int maxWidth) {
+    public static int calculateNoOfColumns(Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-        int noOfColumns = (int) (dpWidth / maxWidth);
+        int noOfColumns = (int) (dpWidth / COLUMN_WIDTH);
         return noOfColumns;
     }
 
+    @NonNull
     @Override
-    public MovieAdapter.MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MovieAdapter.MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         // get the layout for the movie list item
         int layoutIdForListItem = R.layout.movie_list_item;
@@ -48,14 +54,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         boolean attachToParentNow = false;
 
         // inflate the view with the above info
-        View view = inflater.inflate(layoutIdForListItem, parent, attachToParentNow);
+        @SuppressWarnings("ConstantConditions") View view = inflater.inflate(layoutIdForListItem, parent, attachToParentNow);
 
         // return new view holder and pass in the inflated view
         return new MovieViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(MovieAdapter.MovieViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MovieAdapter.MovieViewHolder holder, int position) {
 
         // get the current movie information
         ContentValues currentMovieValues = mMovieContentValues[position];

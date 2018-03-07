@@ -7,6 +7,7 @@ import android.provider.BaseColumns;
  * Created by me74 on 03.03.2018.
  */
 
+@SuppressWarnings("DefaultFileTemplate")
 public class MovieContract {
 
     /*
