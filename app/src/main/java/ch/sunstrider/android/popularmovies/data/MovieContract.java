@@ -1,4 +1,4 @@
-package com.example.android.popularmovies.data;
+package ch.sunstrider.android.popularmovies.data;
 
 import android.net.Uri;
 import android.provider.BaseColumns;
@@ -16,7 +16,7 @@ public class MovieContract {
  * content authority is the package name for the app, which is guaranteed to be unique on the
  * Play Store.
  */
-    public static final String CONTENT_AUTHORITY = "com.example.android.popularmovies";
+    public static final String CONTENT_AUTHORITY = "ch.sunstrider.android.popularmovies";
 
     /*
   * Use CONTENT_AUTHORITY to create the base of all URI's which apps will use to contact

@@ -1,49 +1,41 @@
-package com.example.android.popularmovies;
+package ch.sunstrider.android.popularmovies;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.android.popularmovies.data.MovieContract;
-import com.example.android.popularmovies.utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import ch.sunstrider.android.popularmovies.data.MovieContract;
+import ch.sunstrider.android.popularmovies.utilities.NetworkUtils;
+
 public class DetailActivity extends AppCompatActivity {
-    // TODO: restyle details activity to show all info in separate views.
 
-    /**
-     * TODO: before this, a different approach to store the movie data needs to be implemented,
-     * as the individual info of the movie needs to be retrieved
-     **/
+    private static final String LOG_TAG = DetailActivity.class.getSimpleName();
 
-    private ImageView mPosterImageView;
-
-    private TextView mTitleTextView;
-
-    private TextView mReleaseDateTextView;
-
-    private TextView mVoteTextView;
-
-    private TextView mOverviewTextView;
-
-
+    // Binding of Views
+    @BindView(R.id.iv_detail_movie_poster)
+    ImageView mPosterImageView;
+    @BindView(R.id.tv_title)
+    TextView mTitleTextView;
+    @BindView(R.id.tv_release_date)
+    TextView mReleaseDateTextView;
+    @BindView(R.id.tv_vote_average)
+    TextView mVoteTextView;
+    @BindView(R.id.tv_overview)
+    TextView mOverviewTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        mPosterImageView = findViewById(R.id.iv_detail_movie_poster);
-
-        mTitleTextView = findViewById(R.id.tv_title);
-
-        mReleaseDateTextView = findViewById(R.id.tv_release_date);
-
-        mVoteTextView = findViewById(R.id.tv_vote_average);
-
-        mOverviewTextView = findViewById(R.id.tv_overview);
+        ButterKnife.bind(this);
 
         Intent intentThatCalled = getIntent();
 
@@ -65,10 +57,14 @@ public class DetailActivity extends AppCompatActivity {
 
             String posterUrl = NetworkUtils.buildMoviePosterUrl(posterPath).toString();
 
+            Log.v(LOG_TAG, posterPath);
+            Log.v(LOG_TAG, posterUrl);
+
             // set the poster image to the movie item image view
-            if (posterUrl != null) {
+            if (posterPath != null) {
                 Picasso.with(this)
                         .load(posterUrl)
+                        .error(R.mipmap.ic_launcher)
                         .into(mPosterImageView);
             }
         }

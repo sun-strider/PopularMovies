@@ -1,8 +1,6 @@
-package com.example.android.popularmovies.utilities;
+package ch.sunstrider.android.popularmovies.utilities;
 
 import android.net.Uri;
-
-import com.example.android.popularmovies.BuildConfig;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,6 +9,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
+import ch.sunstrider.android.popularmovies.BuildConfig;
+
 /**
  * Created by me74 on 22.02.2018.
  */
@@ -18,19 +18,14 @@ import java.util.Scanner;
 @SuppressWarnings("DefaultFileTemplate")
 public class NetworkUtils {
 
-    public static final String SORT_BY_POPULARITY_DESC = "popularity.desc";
-    public static final String SORT_BY_VOTE_AVERAGE_DESC = "vote_average.desc";
-
+    public static final String TOP_RATED_PATH =
+            "top_rated";
+    public static final String POPULAR_PATH =
+            "popular";
     static final String MOVIE_BASE_URL =
             "https://api.themoviedb.org/3/";
-
-    static final String DISCOVER_PATH =
-            "discover";
-
     static final String MOVIE_PATH =
             "movie";
-
-
     static final String POSTER_BASE_URL =
             "https://image.tmdb.org/t/p/";
 
@@ -75,12 +70,11 @@ public class NetworkUtils {
      */
     public static URL buildDiscoverMovieUrl(String searchOption) {
         Uri builtUri = Uri.parse(MOVIE_BASE_URL).buildUpon()
-                .appendPath(DISCOVER_PATH)
                 .appendPath(MOVIE_PATH)
+                .appendPath(searchOption)
                 .appendQueryParameter(PARAM_API_KEY, API_KEY)
                 .appendQueryParameter(PARAM_LANGUAGE, LANGUAGE)
                 .appendQueryParameter(PARAM_PAGE, PAGE_SHOWN)
-                .appendQueryParameter(PARAM_SORT, searchOption)
                 .build();
 
         URL url = null;

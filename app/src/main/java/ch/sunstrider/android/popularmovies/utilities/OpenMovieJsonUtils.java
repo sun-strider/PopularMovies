@@ -1,14 +1,14 @@
-package com.example.android.popularmovies.utilities;
+package ch.sunstrider.android.popularmovies.utilities;
 
 import android.content.ContentValues;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.example.android.popularmovies.data.MovieContract;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import ch.sunstrider.android.popularmovies.data.MovieContract;
 
 /**
  * Created by me74 on 28.02.2018.

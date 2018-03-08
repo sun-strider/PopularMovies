@@ -6,7 +6,7 @@
         android:id="@+id/action_search_popular"
         android:orderInCategory="1"
         android:title="@string/search_popular"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_search_rating"

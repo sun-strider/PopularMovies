@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.android.popularmovies.MainActivity">
+    tools:context="ch.sunstrider.android.popularmovies.MainActivity">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_movie"
@@ -23,7 +23,6 @@
             android:text="@string/error_message"
             android:textSize="22sp"
             android:visibility="invisible" />
-
 
         <ProgressBar
             android:id="@+id/pb_loading_indicator"

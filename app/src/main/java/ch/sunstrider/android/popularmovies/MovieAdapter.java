@@ -1,4 +1,4 @@
-package com.example.android.popularmovies;
+package ch.sunstrider.android.popularmovies;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -11,9 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.example.android.popularmovies.data.MovieContract;
-import com.example.android.popularmovies.utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import ch.sunstrider.android.popularmovies.data.MovieContract;
+import ch.sunstrider.android.popularmovies.utilities.NetworkUtils;
 
 /**
  * Created by me74 on 01.03.2018.
@@ -74,6 +77,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         if (posterUrl != null) {
             Picasso.with(holder.movieListItemPosterImageView.getContext())
                     .load(posterUrl)
+                    .error(R.mipmap.ic_launcher)
                     .into(holder.movieListItemPosterImageView);
         }
     }
@@ -101,13 +105,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
 
         // create an ImageView variable in which the movie poster will be stored
-        final ImageView movieListItemPosterImageView;
+        @BindView(R.id.iv_grid_movie_poster)
+        ImageView movieListItemPosterImageView;
 
         public MovieViewHolder(View itemView) {
             super(itemView);
 
-            // in the constructor of the view holder, the movie item view is set
-            movieListItemPosterImageView = itemView.findViewById(R.id.iv_grid_movie_poster);
+            ButterKnife.bind(this, itemView);
 
             // set the click listener to the list item
             itemView.setOnClickListener(this);

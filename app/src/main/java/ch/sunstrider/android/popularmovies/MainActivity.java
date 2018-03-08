@@ -1,4 +1,4 @@
-package com.example.android.popularmovies;
+package ch.sunstrider.android.popularmovies;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -15,37 +15,35 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.android.popularmovies.utilities.NetworkUtils;
-import com.example.android.popularmovies.utilities.OpenMovieJsonUtils;
-
 import java.io.IOException;
 import java.net.URL;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import ch.sunstrider.android.popularmovies.utilities.NetworkUtils;
+import ch.sunstrider.android.popularmovies.utilities.OpenMovieJsonUtils;
 
 public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieAdapterOnClickHandler {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
-    private RecyclerView mRecyclerView;
+    @BindView(R.id.rv_movie)
+    RecyclerView mRecyclerView;
+
+    @BindView(R.id.tv_error_message_display)
+    TextView mErrorMessageTextView;
+
+    @BindView(R.id.pb_loading_indicator)
+    ProgressBar mProgressBar;
 
     private MovieAdapter mMovieAdapter;
-
-    private TextView mErrorMessageTextView;
-
-    private ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // get e reference to the RecyclerView
-        mRecyclerView = findViewById(R.id.rv_movie);
-
-        // TextView to display an error message. will be hidden if there are no errors
-        mErrorMessageTextView = findViewById(R.id.tv_error_message_display);
-
-        // loading progress bar
-        mProgressBar = findViewById(R.id.pb_loading_indicator);
+        ButterKnife.bind(this);
 
         //calculate the number of columns with a desired column width
         int nrOfColumns = MovieAdapter.calculateNoOfColumns(this);
@@ -67,6 +65,15 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
         // the adapter is set on the recycler view
         mRecyclerView.setAdapter(mMovieAdapter);
+
+        URL theMovieDbSearchURL = NetworkUtils.buildDiscoverMovieUrl(NetworkUtils.POPULAR_PATH);
+
+        Log.i(LOG_TAG, theMovieDbSearchURL.toString());
+
+        // set the adapter to null before doing the search again
+        mMovieAdapter.setMovieData(null);
+
+        new MovieDbQueeryTask().execute(theMovieDbSearchURL);
     }
 
 
@@ -103,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     public boolean onOptionsItemSelected(MenuItem item) {
         int clickedItemId = item.getItemId();
         if (clickedItemId == R.id.action_search_popular) {
-            URL theMovieDbSearchURL = NetworkUtils.buildDiscoverMovieUrl(NetworkUtils.SORT_BY_POPULARITY_DESC);
+            URL theMovieDbSearchURL = NetworkUtils.buildDiscoverMovieUrl(NetworkUtils.POPULAR_PATH);
 
             Log.i(LOG_TAG, theMovieDbSearchURL.toString());
 
@@ -113,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
             new MovieDbQueeryTask().execute(theMovieDbSearchURL);
 
         } else if (clickedItemId == R.id.action_search_rating) {
-            URL theMovieDbSearchURL = NetworkUtils.buildDiscoverMovieUrl(NetworkUtils.SORT_BY_VOTE_AVERAGE_DESC);
+            URL theMovieDbSearchURL = NetworkUtils.buildDiscoverMovieUrl(NetworkUtils.TOP_RATED_PATH);
 
             Log.i(LOG_TAG, theMovieDbSearchURL.toString());
 
