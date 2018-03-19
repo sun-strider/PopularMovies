@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         // the adapter is set on the recycler view
         mRecyclerView.setAdapter(mMovieAdapter);
 
-        URL theMovieDbSearchURL = NetworkUtils.buildDiscoverMovieUrl(NetworkUtils.POPULAR_PATH);
+        URL theMovieDbSearchURL = NetworkUtils.buildGetMoviesUrl(NetworkUtils.PATH_POPULAR);
 
         Log.i(LOG_TAG, theMovieDbSearchURL.toString());
 
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     public boolean onOptionsItemSelected(MenuItem item) {
         int clickedItemId = item.getItemId();
         if (clickedItemId == R.id.action_search_popular) {
-            URL theMovieDbSearchURL = NetworkUtils.buildDiscoverMovieUrl(NetworkUtils.POPULAR_PATH);
+            URL theMovieDbSearchURL = NetworkUtils.buildGetMoviesUrl(NetworkUtils.PATH_POPULAR);
 
             Log.i(LOG_TAG, theMovieDbSearchURL.toString());
 
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
             new MovieDbQueeryTask().execute(theMovieDbSearchURL);
 
         } else if (clickedItemId == R.id.action_search_rating) {
-            URL theMovieDbSearchURL = NetworkUtils.buildDiscoverMovieUrl(NetworkUtils.TOP_RATED_PATH);
+            URL theMovieDbSearchURL = NetworkUtils.buildGetMoviesUrl(NetworkUtils.PATH_TOP_RATED);
 
             Log.i(LOG_TAG, theMovieDbSearchURL.toString());
 

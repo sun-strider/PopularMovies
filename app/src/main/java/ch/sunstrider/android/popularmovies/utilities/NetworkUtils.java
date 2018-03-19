@@ -18,20 +18,33 @@ import ch.sunstrider.android.popularmovies.BuildConfig;
 @SuppressWarnings("DefaultFileTemplate")
 public class NetworkUtils {
 
-    public static final String TOP_RATED_PATH =
+
+    // Search path for top rated movies. Needs to be appended after base url & movie path
+    public static final String PATH_TOP_RATED =
             "top_rated";
-    public static final String POPULAR_PATH =
+
+    // Search path for most popular movies. Needs to be appended after base url & movie path
+    public static final String PATH_POPULAR =
             "popular";
+    // Search path to get a movies reviews. Needs to be appended after base url & movie path & movie ID
+    public static final String PATH_REVIEWS =
+            "reviews";
+    // Search path to get a movies reviews. Needs to be appended after base url & movie path & movie ID
+    public static final String PATH_VIDEOS =
+            "videos";
+    // The base url for any The Movie DB query
     static final String MOVIE_BASE_URL =
             "https://api.themoviedb.org/3/";
-    static final String MOVIE_PATH =
+    // The movie path. Movie searches need this to be appended to the base path
+    static final String PATH_MOVIE =
             "movie";
+    // The Base URL to get the movie poster. The poster path in the JSON response for the movie search needs
+    // to be appended to this, after the size. It needs to appended as encoded path.
     static final String POSTER_BASE_URL =
             "https://image.tmdb.org/t/p/";
-
+    // The size for the movie poster. Needs to be appended to the base path when building the poster URL
     static final String PATH_POSTER_SIZE_STANDARD =
             "w780";
-
     /*
     * The sort field.
     * Default: results are sorted by popularity if no field is specified.
@@ -64,13 +77,13 @@ public class NetworkUtils {
 
 
     /**
-     * Builds the URL used to query GitHub.
+     * Builds the URL used to query The Movie DB.
      *
-     * @return The URL to use to query the GitHub.
+     * @return The URL which starts the the requested search.
      */
-    public static URL buildDiscoverMovieUrl(String searchOption) {
+    public static URL buildGetMoviesUrl(String searchOption) {
         Uri builtUri = Uri.parse(MOVIE_BASE_URL).buildUpon()
-                .appendPath(MOVIE_PATH)
+                .appendPath(PATH_MOVIE)
                 .appendPath(searchOption)
                 .appendQueryParameter(PARAM_API_KEY, API_KEY)
                 .appendQueryParameter(PARAM_LANGUAGE, LANGUAGE)
@@ -87,16 +100,69 @@ public class NetworkUtils {
         return url;
     }
 
+    /**
+     * Builds the URL used to get the movie poster
+     *
+     * @return The URL which shows the movie poster
+     */
     public static URL buildMoviePosterUrl(String posterPath) {
         Uri builtUri = Uri.parse(POSTER_BASE_URL).buildUpon()
                 .appendPath(PATH_POSTER_SIZE_STANDARD)
+                .appendEncodedPath(posterPath)
                 .build();
-
-        String fullUrlString = builtUri.toString() + posterPath;
 
         URL url = null;
         try {
-            url = new URL(fullUrlString);
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return url;
+    }
+
+    /**
+     * Builds the URL used to get a movies reviews
+     *
+     * @return The URL which starts the the requested search.
+     */
+    public static URL buildGetMovieReviewsUrl(String movieId) {
+        Uri builtUri = Uri.parse(MOVIE_BASE_URL).buildUpon()
+                .appendPath(PATH_MOVIE)
+                .appendPath(movieId)
+                .appendPath(PATH_REVIEWS)
+                .appendQueryParameter(PARAM_API_KEY, API_KEY)
+                .appendQueryParameter(PARAM_LANGUAGE, LANGUAGE)
+                .appendQueryParameter(PARAM_PAGE, PAGE_SHOWN)
+                .build();
+
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return url;
+    }
+
+    /**
+     * Builds the URL used to get a movies reviews
+     *
+     * @return The URL which starts the the requested search.
+     */
+    public static URL buildGetMovieVideosUrl(String movieId) {
+        Uri builtUri = Uri.parse(MOVIE_BASE_URL).buildUpon()
+                .appendPath(PATH_MOVIE)
+                .appendPath(movieId)
+                .appendPath(PATH_VIDEOS)
+                .appendQueryParameter(PARAM_API_KEY, API_KEY)
+                .appendQueryParameter(PARAM_LANGUAGE, LANGUAGE)
+                .build();
+
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
