@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import butterknife.BindView;
@@ -25,7 +26,15 @@ import ch.sunstrider.android.popularmovies.utilities.OpenMovieJsonUtils;
 
 public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieAdapterOnClickHandler {
 
+    // Key for the url
+    static final String QUERY_URL_KEY = "query";
+    // Key for the query result
+    static final String JSON_RESULT_KEY = "result";
+    // Tag name for the activity
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
+    private static URL theMovieDbSearchURL = null;
+
+    private static String movieDbSearchResults = null;
 
     @BindView(R.id.rv_movie)
     RecyclerView mRecyclerView;
@@ -66,14 +75,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         // the adapter is set on the recycler view
         mRecyclerView.setAdapter(mMovieAdapter);
 
-        URL theMovieDbSearchURL = NetworkUtils.buildGetMoviesUrl(NetworkUtils.PATH_POPULAR);
-
-        Log.i(LOG_TAG, theMovieDbSearchURL.toString());
-
         // set the adapter to null before doing the search again
         mMovieAdapter.setMovieData(null);
 
-        new MovieDbQueeryTask().execute(theMovieDbSearchURL);
+        new MovieDbQueeryTask().execute(savedInstanceState);
     }
 
 
@@ -110,24 +115,24 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     public boolean onOptionsItemSelected(MenuItem item) {
         int clickedItemId = item.getItemId();
         if (clickedItemId == R.id.action_search_popular) {
-            URL theMovieDbSearchURL = NetworkUtils.buildGetMoviesUrl(NetworkUtils.PATH_POPULAR);
+            theMovieDbSearchURL = NetworkUtils.buildGetMoviesUrl(NetworkUtils.PATH_POPULAR);
 
             Log.i(LOG_TAG, theMovieDbSearchURL.toString());
 
             // set the adapter to null before doing the search again
             mMovieAdapter.setMovieData(null);
 
-            new MovieDbQueeryTask().execute(theMovieDbSearchURL);
+            new MovieDbQueeryTask().execute((Bundle) null);
 
         } else if (clickedItemId == R.id.action_search_rating) {
-            URL theMovieDbSearchURL = NetworkUtils.buildGetMoviesUrl(NetworkUtils.PATH_TOP_RATED);
+            theMovieDbSearchURL = NetworkUtils.buildGetMoviesUrl(NetworkUtils.PATH_TOP_RATED);
 
             Log.i(LOG_TAG, theMovieDbSearchURL.toString());
 
             // set the adapter to null before doing the search again
             mMovieAdapter.setMovieData(null);
 
-            new MovieDbQueeryTask().execute(theMovieDbSearchURL);
+            new MovieDbQueeryTask().execute((Bundle) null);
         }
         return true;
     }
@@ -139,7 +144,18 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         startActivity(intent);
     }
 
-    private class MovieDbQueeryTask extends AsyncTask<URL, Void, ContentValues[]> {
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // put the query URL in the bundle
+        outState.putString(QUERY_URL_KEY, theMovieDbSearchURL.toString());
+
+        // put the JSON search result in the bundle
+        outState.putString(JSON_RESULT_KEY, movieDbSearchResults);
+    }
+
+    private class MovieDbQueeryTask extends AsyncTask<Bundle, Void, ContentValues[]> {
 
         @Override
         protected void onPreExecute() {
@@ -147,12 +163,31 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         }
 
         @Override
-        protected ContentValues[] doInBackground(URL... urls) {
-            URL searchUrl = urls[0];
-            String movieDbSearchResults;
+        protected ContentValues[] doInBackground(Bundle... bundles) {
+
+            if (theMovieDbSearchURL == null) {
+                theMovieDbSearchURL = NetworkUtils.buildGetMoviesUrl(NetworkUtils.PATH_POPULAR);
+            }
+
+            Bundle savedState = bundles[0];
+
+            if (savedState != null) {
+
+                if (savedState.containsKey(JSON_RESULT_KEY)) {
+                    return OpenMovieJsonUtils.parseMovieDbJson(savedState.getString(JSON_RESULT_KEY));
+                }
+
+                if (savedState.containsKey(QUERY_URL_KEY)) {
+                    try {
+                        theMovieDbSearchURL = new URL(savedState.getString(QUERY_URL_KEY));
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
 
             // do the http request and store the JSON result in a string
-            movieDbSearchResults = doMovieDbSearch(searchUrl);
+            movieDbSearchResults = doMovieDbSearch(theMovieDbSearchURL);
 
             // parse the JSON string and return a content values array
             return OpenMovieJsonUtils.parseMovieDbJson(movieDbSearchResults);
