@@ -2,13 +2,16 @@ package ch.sunstrider.android.popularmovies;
 
 import android.content.ContentValues;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,12 +27,18 @@ import butterknife.ButterKnife;
 import ch.sunstrider.android.popularmovies.utilities.NetworkUtils;
 import ch.sunstrider.android.popularmovies.utilities.OpenMovieJsonUtils;
 
-public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieAdapterOnClickHandler {
+public class MainActivity extends AppCompatActivity
+        implements MovieAdapter.MovieAdapterOnClickHandler, LoaderManager.LoaderCallbacks<ContentValues[]> {
+
+    // ID for the loader
+    private static final int LOADER_ID = 20;
 
     // Key for the url
     static final String QUERY_URL_KEY = "query";
+
     // Key for the query result
     static final String JSON_RESULT_KEY = "result";
+
     // Tag name for the activity
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static URL theMovieDbSearchURL = null;
@@ -78,7 +87,11 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         // set the adapter to null before doing the search again
         mMovieAdapter.setMovieData(null);
 
-        new MovieDbQueeryTask().execute(savedInstanceState);
+        // Call getSupportLoaderManager and store it in a LoaderManager variable
+        LoaderManager loaderManager = getSupportLoaderManager();
+
+        // init loader
+        loaderManager.initLoader(LOADER_ID, savedInstanceState, this);
     }
 
 
@@ -113,27 +126,41 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        // Call getSupportLoaderManager and store it in a LoaderManager variable
+        LoaderManager loaderManager = getSupportLoaderManager();
+
+        // Get our Loader by calling getLoader and passing the ID we specified
+        Loader<String> movieSearchLoader = loaderManager.getLoader(LOADER_ID);
+
+        // Create bundle to store the URL
+        Bundle queryBundle = new Bundle();
+
         int clickedItemId = item.getItemId();
         if (clickedItemId == R.id.action_search_popular) {
-            theMovieDbSearchURL = NetworkUtils.buildGetMoviesUrl(NetworkUtils.PATH_POPULAR);
 
-            Log.i(LOG_TAG, theMovieDbSearchURL.toString());
+            // Store the URL popular movies in the bundle
+            queryBundle.putString(QUERY_URL_KEY, NetworkUtils.buildGetMoviesUrl(NetworkUtils.PATH_POPULAR).toString());
 
             // set the adapter to null before doing the search again
             mMovieAdapter.setMovieData(null);
-
-            new MovieDbQueeryTask().execute((Bundle) null);
 
         } else if (clickedItemId == R.id.action_search_rating) {
-            theMovieDbSearchURL = NetworkUtils.buildGetMoviesUrl(NetworkUtils.PATH_TOP_RATED);
 
-            Log.i(LOG_TAG, theMovieDbSearchURL.toString());
+            // Store the URL top rated movies in the bundle
+            queryBundle.putString(QUERY_URL_KEY, NetworkUtils.buildGetMoviesUrl(NetworkUtils.PATH_TOP_RATED).toString());
 
             // set the adapter to null before doing the search again
             mMovieAdapter.setMovieData(null);
-
-            new MovieDbQueeryTask().execute((Bundle) null);
         }
+
+        // If the Loader was null, initialize it. Else, restart it.
+        if (movieSearchLoader == null) {
+            loaderManager.initLoader(LOADER_ID, queryBundle, this);
+        } else {
+            loaderManager.restartLoader(LOADER_ID, queryBundle, this);
+        }
+
         return true;
     }
 
@@ -155,6 +182,79 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         outState.putString(JSON_RESULT_KEY, movieDbSearchResults);
     }
 
+    @NonNull
+    @Override
+    public Loader<ContentValues[]> onCreateLoader(int id, @Nullable final Bundle args) {
+        return new AsyncTaskLoader<ContentValues[]>(this) {
+
+            @Override
+            protected void onStartLoading() {
+                super.onStartLoading();
+
+/*                // if args is null, return early
+                if (args == null) {
+                    return;
+                }*/
+
+                // show the progress bar
+                mProgressBar.setVisibility(View.VISIBLE);
+
+                // force the loading
+                forceLoad();
+            }
+
+            @Nullable
+            @Override
+            public ContentValues[] loadInBackground() {
+
+                if (theMovieDbSearchURL == null) {
+                    theMovieDbSearchURL = NetworkUtils.buildGetMoviesUrl(NetworkUtils.PATH_POPULAR);
+                }
+
+                if (args != null) {
+
+                    if (args.containsKey(JSON_RESULT_KEY)) {
+                        return OpenMovieJsonUtils.parseMovieDbJson(args.getString(JSON_RESULT_KEY));
+                    }
+
+                    if (args.containsKey(QUERY_URL_KEY)) {
+                        try {
+                            theMovieDbSearchURL = new URL(args.getString(QUERY_URL_KEY));
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                // do the http request and store the JSON result in a string
+                movieDbSearchResults = doMovieDbSearch(theMovieDbSearchURL);
+
+                // parse the JSON string and return a content values array
+                return OpenMovieJsonUtils.parseMovieDbJson(movieDbSearchResults);
+
+            }
+        };
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<ContentValues[]> loader, ContentValues[] movieData) {
+
+        mProgressBar.setVisibility(View.INVISIBLE);
+
+        if (movieData != null) {
+            mMovieAdapter.setMovieData(movieData);
+            showMovieDataView();
+        } else {
+            showErrorMessage();
+        }
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<ContentValues[]> loader) {
+
+    }
+
+/*
     private class MovieDbQueeryTask extends AsyncTask<Bundle, Void, ContentValues[]> {
 
         @Override
@@ -206,4 +306,5 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
             }
         }
     }
+    */
 }
