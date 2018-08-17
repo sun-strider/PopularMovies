@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,15 +31,12 @@ import ch.sunstrider.android.popularmovies.utilities.OpenMovieJsonUtils;
 public class MainActivity extends AppCompatActivity
         implements MovieAdapter.MovieAdapterOnClickHandler, LoaderManager.LoaderCallbacks<ContentValues[]> {
 
-    // ID for the loader
-    private static final int LOADER_ID = 20;
-
     // Key for the url
     static final String QUERY_URL_KEY = "query";
-
     // Key for the query result
     static final String JSON_RESULT_KEY = "result";
-
+    // ID for the loader
+    private static final int LOADER_ID = 20;
     // Tag name for the activity
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static URL theMovieDbSearchURL = null;
@@ -173,6 +171,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        Log.v(LOG_TAG, "Inside onSaveInstanceState");
+
         super.onSaveInstanceState(outState);
 
         // put the query URL in the bundle
@@ -187,8 +187,12 @@ public class MainActivity extends AppCompatActivity
     public Loader<ContentValues[]> onCreateLoader(int id, @Nullable final Bundle args) {
         return new AsyncTaskLoader<ContentValues[]>(this) {
 
+            ContentValues[] mParsedMovieDataResults;
+
             @Override
             protected void onStartLoading() {
+                Log.v(LOG_TAG, "Inside onStartLoading");
+
                 super.onStartLoading();
 
 /*                // if args is null, return early
@@ -199,25 +203,34 @@ public class MainActivity extends AppCompatActivity
                 // show the progress bar
                 mProgressBar.setVisibility(View.VISIBLE);
 
-                // force the loading
-                forceLoad();
+                // If mParsedMovieDataResults is not null, deliver that result. Otherwise, force a load
+                if (mParsedMovieDataResults != null) {
+                    deliverResult(mParsedMovieDataResults);
+                } else {
+                    forceLoad();
+                }
             }
 
             @Nullable
             @Override
             public ContentValues[] loadInBackground() {
+                Log.v(LOG_TAG, "Inside loadInBackground");
 
                 if (theMovieDbSearchURL == null) {
+                    Log.v(LOG_TAG, "Inside loadInBackground, if search URL == null");
                     theMovieDbSearchURL = NetworkUtils.buildGetMoviesUrl(NetworkUtils.PATH_POPULAR);
                 }
 
                 if (args != null) {
+                    Log.v(LOG_TAG, "Inside loadInBackground, if args != null");
 
                     if (args.containsKey(JSON_RESULT_KEY)) {
+                        Log.v(LOG_TAG, "Inside loadInBackground, if args contains JSON key");
                         return OpenMovieJsonUtils.parseMovieDbJson(args.getString(JSON_RESULT_KEY));
                     }
 
                     if (args.containsKey(QUERY_URL_KEY)) {
+                        Log.v(LOG_TAG, "Inside loadInBackground, if args contains URL key");
                         try {
                             theMovieDbSearchURL = new URL(args.getString(QUERY_URL_KEY));
                         } catch (MalformedURLException e) {
@@ -233,11 +246,23 @@ public class MainActivity extends AppCompatActivity
                 return OpenMovieJsonUtils.parseMovieDbJson(movieDbSearchResults);
 
             }
+
+            @Override
+            public void deliverResult(@Nullable ContentValues[] data) {
+                Log.v(LOG_TAG, "Inside deliverResult");
+
+                // store the movie data in the member variable
+                mParsedMovieDataResults = data;
+
+                super.deliverResult(data);
+
+            }
         };
     }
 
     @Override
     public void onLoadFinished(@NonNull Loader<ContentValues[]> loader, ContentValues[] movieData) {
+        Log.v(LOG_TAG, "Inside onLoadFinished");
 
         mProgressBar.setVisibility(View.INVISIBLE);
 
@@ -251,6 +276,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onLoaderReset(@NonNull Loader<ContentValues[]> loader) {
+        Log.v(LOG_TAG, "Inside onLoaderreset");
 
     }
 

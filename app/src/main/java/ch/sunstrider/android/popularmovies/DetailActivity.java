@@ -1,6 +1,7 @@
 package ch.sunstrider.android.popularmovies;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -8,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+
+import java.net.URL;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -17,6 +20,8 @@ import ch.sunstrider.android.popularmovies.utilities.NetworkUtils;
 public class DetailActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = DetailActivity.class.getSimpleName();
+
+    String mMovieId = "";
 
     // Binding of Views
     @BindView(R.id.iv_detail_movie_poster)
@@ -29,6 +34,8 @@ public class DetailActivity extends AppCompatActivity {
     TextView mVoteTextView;
     @BindView(R.id.tv_overview)
     TextView mOverviewTextView;
+    @BindView(R.id.iv_star_button)
+    ImageView mStarButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +49,8 @@ public class DetailActivity extends AppCompatActivity {
         if (intentThatCalled.hasExtra("movieBundle")) {
 
             Bundle movieBundle = intentThatCalled.getBundleExtra("movieBundle");
+
+            mMovieId = movieBundle.getString(MovieContract.MovieEntry.COLUMN_MOVIE_ID);
 
             String posterPath = movieBundle.getString(MovieContract.MovieEntry.COLUMN_POSTER_PATH);
 
@@ -69,4 +78,33 @@ public class DetailActivity extends AppCompatActivity {
             }
         }
     }
+
+    public class FetchVideosTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                URL videosUrl = NetworkUtils.buildGetMovieVideosUrl(mMovieId);
+                return NetworkUtils.getResponseFromHttpUrl(videosUrl);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    public class FetchReviewsTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                URL videosUrl = NetworkUtils.buildGetMovieReviewsUrl(mMovieId);
+                return NetworkUtils.getResponseFromHttpUrl(videosUrl);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
 }

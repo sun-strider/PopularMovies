@@ -124,11 +124,24 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
             // make a bundle out of the current movie so it can be passed with the intent
             Bundle movieBundle = new Bundle();
-            movieBundle.putString(MovieContract.MovieEntry.COLUMN_TITLE, currentMovie.getAsString(MovieContract.MovieEntry.COLUMN_TITLE));
-            movieBundle.putString(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, currentMovie.getAsString(MovieContract.MovieEntry.COLUMN_RELEASE_DATE));
-            movieBundle.putString(MovieContract.MovieEntry.COLUMN_POSTER_PATH, currentMovie.getAsString(MovieContract.MovieEntry.COLUMN_POSTER_PATH));
-            movieBundle.putString(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE, currentMovie.getAsString(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE));
-            movieBundle.putString(MovieContract.MovieEntry.COLUMN_OVERVIEW, currentMovie.getAsString(MovieContract.MovieEntry.COLUMN_OVERVIEW));
+            movieBundle.putString(MovieContract.MovieEntry.COLUMN_MOVIE_ID,
+                    currentMovie.getAsString(MovieContract.MovieEntry.COLUMN_MOVIE_ID));
+            movieBundle.putString(MovieContract.MovieEntry.COLUMN_TITLE,
+                    currentMovie.getAsString(MovieContract.MovieEntry.COLUMN_TITLE));
+            movieBundle.putString(MovieContract.MovieEntry.COLUMN_RELEASE_DATE,
+                    currentMovie.getAsString(MovieContract.MovieEntry.COLUMN_RELEASE_DATE));
+            movieBundle.putString(MovieContract.MovieEntry.COLUMN_POSTER_PATH,
+                    currentMovie.getAsString(MovieContract.MovieEntry.COLUMN_POSTER_PATH));
+            movieBundle.putString(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE,
+                    currentMovie.getAsString(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE));
+            movieBundle.putString(MovieContract.MovieEntry.COLUMN_OVERVIEW,
+                    currentMovie.getAsString(MovieContract.MovieEntry.COLUMN_OVERVIEW));
+
+            // ToDo: favorite toggle state is needed
+            // ToDo: to do this, it first has to be checked, if the movie is in the list of favorites (DB) if it is, then star is on
+
+            /* ToDo: before implementing the DB, it may be possible to implement this with the contentvalues stored in mainactivity
+            * for this to work, the state has to be passed back from detailactivity*/
 
             mClickHandler.onClick(movieBundle);
         }

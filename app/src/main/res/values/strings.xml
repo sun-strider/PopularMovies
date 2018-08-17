@@ -9,6 +9,10 @@
 
     <string name="movie_poster_iv_info">Movie Poster</string>
 
+    <string name="favorite_iv_info">Add to Favorite Button</string>
+
+    <string name="favorite_tv">Favorite</string>
+
     <string name="vote_average">Vote Average: </string>
 
 </resources>

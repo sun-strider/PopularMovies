@@ -25,6 +25,7 @@ public class OpenMovieJsonUtils {
         ContentValues[] movieContentValues = null;
 
         final String M_DB_RESULTS = "results";
+        final String M_DB_ID = "id";
         final String M_DB_TITLE = "original_title";
         final String M_DB_RELEASE_DATE = "release_date";
         final String M_DB_POSTER_PATH = "poster_path";
@@ -34,6 +35,7 @@ public class OpenMovieJsonUtils {
         JSONObject mBaseJsonResponse;
         JSONArray mResults;
         JSONObject mMovie;
+        String movieId = "";
         String title = "";
         String releaseDate = "";
         String posterPath = "";
@@ -64,6 +66,11 @@ public class OpenMovieJsonUtils {
 
                     mMovie = mResults.getJSONObject(i);
 
+                    if (mMovie.has(M_DB_ID)) {
+
+                        movieId = mMovie.getString(M_DB_ID);
+                    }
+
                     if (mMovie.has(M_DB_TITLE)) {
 
                         title = mMovie.getString(M_DB_TITLE);
@@ -93,6 +100,7 @@ public class OpenMovieJsonUtils {
                     // TODO: store the data in a Movie ArrayList
 
                     ContentValues movieValues = new ContentValues();
+                    movieValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, movieId);
                     movieValues.put(MovieContract.MovieEntry.COLUMN_TITLE, title);
                     movieValues.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, releaseDate);
                     movieValues.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH, posterPath);
