@@ -87,8 +87,9 @@
             android:layout_marginEnd="@dimen/activity_horizontal_margin_small"
             android:layout_marginStart="@dimen/activity_horizontal_margin_small"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:textColor="@color/colorPrimaryDark"
+            android:justificationMode="inter_word"
             android:textSize="@dimen/text_size_standard"
+            android:textColor="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_detail_movie_poster"
@@ -101,7 +102,7 @@
             android:layout_marginTop="16dp"
             android:clickable="true"
             android:contentDescription="@string/favorite_iv_info"
-            android:focusable="auto"
+            android:focusable="true"
             android:scaleType="fitCenter"
             app:layout_constraintStart_toStartOf="@+id/textView6"
             app:layout_constraintTop_toBottomOf="@+id/textView6"
@@ -121,6 +122,108 @@
             app:layout_constraintStart_toEndOf="@+id/iv_star_button"
             app:layout_constraintTop_toTopOf="@+id/iv_star_button" />
 
+        <TextView
+            android:id="@+id/tv_trailers_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:text="@string/title_trailers"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/text_size_medium"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/tv_overview"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/tv_overview"
+            app:layout_constraintTop_toBottomOf="@+id/tv_overview" />
+
+        <LinearLayout
+            android:id="@+id/layout_trailers"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="@+id/tv_trailers_title"
+            app:layout_constraintStart_toStartOf="@+id/tv_trailers_title"
+            app:layout_constraintTop_toBottomOf="@+id/tv_trailers_title">
+
+            <TextView
+                android:id="@+id/tv_no_trailers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/no_trailers"
+                android:gravity="center"
+                android:text="@string/no_trailers"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_standard"
+                android:visibility="gone"
+                tools:text="@string/no_trailers" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_reviews_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:gravity="center"
+            android:text="@string/title_reviews"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/text_size_medium"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/layout_trailers"
+            app:layout_constraintStart_toStartOf="@+id/layout_trailers"
+            app:layout_constraintTop_toBottomOf="@+id/layout_trailers" />
+
+        <TextView
+            android:id="@+id/tv_review_count"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="@string/review_count"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_standard"
+            app:layout_constraintEnd_toEndOf="@+id/tv_reviews_title"
+            app:layout_constraintStart_toStartOf="@+id/tv_reviews_title"
+            app:layout_constraintTop_toBottomOf="@+id/tv_reviews_title" />
+
+        <TextView
+            android:id="@+id/tv_authors"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="@string/authors"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/text_size_standard"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/tv_review_count"
+            app:layout_constraintStart_toStartOf="@+id/tv_review_count"
+            app:layout_constraintTop_toBottomOf="@+id/tv_review_count" />
+
+        <TextView
+            android:id="@+id/tv_review"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:justificationMode="inter_word"
+            android:text="@string/review"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_standard"
+            app:layout_constraintEnd_toEndOf="@+id/tv_authors"
+            app:layout_constraintStart_toStartOf="@+id/tv_authors"
+            app:layout_constraintTop_toBottomOf="@+id/tv_authors" />
+
+        <ImageButton
+            android:id="@+id/bt_next_review"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:contentDescription="@string/next_review_description"
+            android:src="@drawable/baseline_play_arrow_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_review" />
 
     </android.support.constraint.ConstraintLayout>
 

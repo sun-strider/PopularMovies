@@ -15,4 +15,21 @@
 
     <string name="vote_average">Vote Average: </string>
 
+    <string name="title_trailers">Trailers</string>
+
+    <string name="title_reviews">Reviews</string>
+
+    <string name="no_trailers">No Trailers available</string>
+
+    <string name="no_reviews">No Reviews available</string>
+
+
+    <string name="next_review_description">Next review button</string>
+
+    <string name="review_count">Review Count</string>
+
+    <string name="authors">Authors</string>
+
+    <string name="review">Review</string>
+
 </resources>
